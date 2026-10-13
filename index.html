@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHITHI SSC - Online Learning Platform</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+
+        /* SCREEN SYSTEM */
+        .screen {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* ১. লগইন স্ক্রিন */
+        #login-screen {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            padding: 35px 25px;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .login-card h1 {
+            font-size: 26px;
+            color: #2563eb;
+            margin-bottom: 5px;
+            font-weight: 800;
+        }
+
+        .login-card p {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px 12px 10px 38px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .btn-login:hover {
+            background: #1d4ed8;
+        }
+
+        /* ২. প্রধান অ্যাপ স্ক্রিন */
+        #app-screen {
+            flex-direction: column;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .top-navbar {
+            background: #ffffff;
+            padding: 12px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .app-title {
+            color: #2563eb;
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-logout {
+            background: #fee2e2;
+            color: #ef4444;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .page-view {
+            display: none;
+            padding: 25px 5%;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        .page-view.active {
+            display: block;
+        }
+
+        /* ড্যাশবোর্ড গ্রিড */
+        .welcome-banner {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border-radius: 12px;
+            padding: 25px;
+            color: white;
+            margin-bottom: 25px;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .subject-card {
+            background: #ffffff;
+            padding: 18px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-3px);
+            border-color: #2563eb;
+        }
+
+        .sub-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        /* বিষয়ের তালিকা */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2563eb;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .chapters-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chapter-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .chapter-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 5px;
+        }
+
+        .lecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .lecture-btn {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lecture-btn:hover {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        /* ফুল স্ক্রিন ভিডিও মোডাল */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #000;
+            width: 100%;
+            height: 100%;
+            max-width: 1000px;
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #0f172a;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .video-container {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ১. লগইন স্ক্রিন -->
+    <div id="login-screen" class="screen active">
+        <div class="login-card">
+            <h1>SHOUROV  SSC</h1>
+            <p>আপনার অ্যাকাউন্টে প্রবেশ করুন</p>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>শিক্ষার্থী আইডি</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="user-id" placeholder="যেমন: student123" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>পাসওয়ার্ড</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="user-pass" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <button type="shourov" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> প্রবেশ করুন</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ২. প্রধান অ্যাপ -->
+    <div id="app-screen" class="screen">
+        <header class="top-navbar">
+            <div class="app-title"><i class="fa-solid fa-graduation-cap"></i> SHITHI SSC</div>
+            <div class="user-profile">
+                <span id="display-user-name" style="font-weight: 600;">Student</span>
+                <button class="btn-logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </header>
+
+        <!-- ড্যাশবোর্ড -->
+        <div id="dashboard-view" class="page-view active">
+            <div class="welcome-banner">
+                <h2>স্বাগতম, <span id="welcome-name">শিক্ষার্থী</span>!</h2>
+                <p>SHITHI SSC প্ল্যাটফর্মে বিষয় সিলেক্ট করে ক্লাস শুরু করো।</p>
+            </div>
+
+            <div class="subjects-grid">
+                <div class="subject-card" onclick="openSubject('পদার্থবিজ্ঞান')">
+                    <div class="sub-icon" style="background: #0284c7;"><i class="fa-solid fa-atom"></i></div>
+                    <div>
+                        <h4>পদার্থবিজ্ঞান</h4>
+                        <span style="font-size: 12px; color:#64748b;">সকল লেকচার ভিডিও</span>
+                    </div>
+                </div>
+
+                <div class="subject-card" onclick="openSubject('রসায়ন')">
+                    <div class="sub-icon" style="background: #ca8a04;"><i class="fa-solid fa-flask"></i></div>
+                    <div>
+                        <h4>রসায়ন</h4>
+                        <span style="font-size: 12px; color:#64748b;">সকল লেকচার ভিডিও</span>
+                    </div>
+                </div>
+
+                <div class="subject-card" onclick="openSubject('জীববিজ্ঞান')">
+                    <div class="sub-icon" style="background: #e11d48;"><i class="fa-solid fa-dna"></i></div>
+                    <div>
+                        <h4>জীববিজ্ঞান</h4>
+                        <span style="font-size: 12px; color:#64748b;">সকল লেকচার ভিডিও</span>
+                    </div>
+                </div>
+
+                <div class="subject-card" onclick="openSubject('সাধারণ গণিত')">
+                    <div class="sub-icon" style="background: #16a34a;"><i class="fa-solid fa-square-root-variable"></i></div>
+                    <div>
+                        <h4>সাধারণ গণিত</h4>
+                        <span style="font-size: 12px; color:#64748b;">সকল লেকচার ভিডিও</span>
+                    </div>
+                </div>
+
+                <div class="subject-card" onclick="openSubject('উচ্চতর গণিত')">
+                    <div class="sub-icon" style="background: #4f46e5;"><i class="fa-solid fa-calculator"></i></div>
+                    <div>
+                        <h4>উচ্চতর গণিত</h4>
+                        <span style="font-size: 12px; color:#64748b;">সকল লেকচার ভিডিও</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- লেকচার তালিকা স্ক্রিন -->
+        <div id="chapters-view" class="page-view">
+            <div class="back-btn" onclick="showPage('dashboard-view')">
+                <i class="fa-solid fa-arrow-left"></i> বিষয়সমূহে ফিরে যান
+            </div>
+
+            <h2 id="current-subject-title" style="margin-bottom: 20px;">বিষয়</h2>
+            <div class="chapters-list" id="chapters-container"></div>
+        </div>
+    </div>
+
+    <!-- ৩. ভিডিও প্লেয়ার মোডাল -->
+    <div class="modal-overlay" id="video-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="video-title">লেকচার ভিডিও</h4>
+                <button class="close-btn" onclick="closeVideo()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="video-container">
+                <iframe id="video-frame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const courseData = {
+            "পদার্থবিজ্ঞান": [{
+                    chapter: "অধ্যায়- ০১: ভৌত রাশি এবং তাদের পরিমাপ",
+                    lectures: [{
+                        name: "Lec: 1+2",
+                        code: "qUFVgxnyctE"
+                    }]
+                },
+                {
+                    chapter: "অধ্যায়- ০২: গতি",
+                    lectures: [{
+                            name: "Lec: 5+6",
+                            code: "VlyZHc4uIY0"
+                        },
+                        {
+                            name: "Lec: 7+8",
+                            code: "qvqv0MBlfDM"
+                        },
+                        {
+                            name: "Lec: 9+10",
+                            code: "NKnwxcyV75c"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৩: বল",
+                    lectures: [{
+                            name: "Lec: 11+12",
+                            code: "F4Y43d30EQA"
+                        },
+                        {
+                            name: "Lec: 13+14",
+                            code: "un78HaukZv4"
+                        },
+                        {
+                            name: "Lec: 15+16",
+                            code: "rLolHgBVuso"
+                        },
+                        {
+                            name: "Lec: 17+18",
+                            code: "vqF1FvJkgqg"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৪: কাজ, ক্ষমতা ও শক্তি",
+                    lectures: [{
+                            name: "Lec: 19+20",
+                            code: "CArVYSpP4PI"
+                        },
+                        {
+                            name: "Lec: 21+22",
+                            code: "_vHu1tn8mlY"
+                        },
+                        {
+                            name: "Lec: 23",
+                            code: "fWgjMi_onU4"
+                        },
+                        {
+                            name: "Lec: 24",
+                            code: "Q7xSa76h7es"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৫: পদার্থের অবস্থা ও চাপ",
+                    lectures: [{
+                            name: "Lec: 25",
+                            code: "2_htYOsN1TM"
+                        },
+                        {
+                            name: "Lec: 26",
+                            code: "jnGGMpDp8qM"
+                        },
+                        {
+                            name: "Lec: 27",
+                            code: "yL6Sj3DwakA"
+                        },
+                        {
+                            name: "Lec: 28",
+                            code: "sSf5aD7iuFU"
+                        },
+                        {
+                            name: "Lec: 29",
+                            code: "8ggXO08-Ekw"
+                        },
+                        {
+                            name: "Lec: 30",
+                            code: "pJC_OZxMXHA"
+                        },
+                        {
+                            name: "Lec: 31",
+                            code: "emuqyuP1EiM"
+                        },
+                        {
+                            name: "Lec: 32",
+                            code: "Yor8QgOiEjo"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৬: বস্তুর ওপর তাপের প্রভাব",
+                    lectures: [{
+                            name: "Lec: 33",
+                            code: "cFs1cEEBvLA"
+                        },
+                        {
+                            name: "Lec: 34",
+                            code: "_k1ZF7VOziE"
+                        },
+                        {
+                            name: "Lec: 35",
+                            code: "QVD1m3NGtGM"
+                        },
+                        {
+                            name: "Lec: 36",
+                            code: "0wtEls_Lncw"
+                        },
+                        {
+                            name: "Lec: 37",
+                            code: "JtmScdUwHT4"
+                        },
+                        {
+                            name: "Lec: 38",
+                            code: "uC-kwyDp84M"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৭: তরঙ্গ ও শব্দ",
+                    lectures: [{
+                            name: "Lec: 39",
+                            code: "Lv6P8_AQL30"
+                        },
+                        {
+                            name: "Lec: 40",
+                            code: "M04bVNjapJE"
+                        },
+                        {
+                            name: "Lec: 41",
+                            code: "8Ao6jlgGNJ0"
+                        },
+                        {
+                            name: "Lec: 42",
+                            code: "7ZtRpeZmfrA"
+                        },
+                        {
+                            name: "Lec: 43",
+                            code: "rWb_MDhA3Oo"
+                        },
+                        {
+                            name: "Lec: 44",
+                            code: "La6NiXIQNxM"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৮: আলোর প্রতিফলন",
+                    lectures: [{
+                            name: "Lec: 45",
+                            code: "8WmEYYg_Rt4"
+                        },
+                        {
+                            name: "Lec: 46",
+                            code: "8hSjqR6iIFE"
+                        },
+                        {
+                            name: "Lec: 47",
+                            code: "cLFBmGE1hKc"
+                        },
+                        {
+                            name: "Lec: 48",
+                            code: "T6HBizywVeA"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৯: আলোর প্রতিসরণ",
+                    lectures: [{
+                            name: "Lec: 51",
+                            code: "EqwVA1NKH3E"
+                        },
+                        {
+                            name: "Lec: 52",
+                            code: "18wkbfMeasw"
+                        },
+                        {
+                            name: "Lec: 53",
+                            code: "jlT7NPkaHoA"
+                        },
+                        {
+                            name: "Lec: 55",
+                            code: "X8399pDMb04"
+                        },
+                        {
+                            name: "Lec: 56",
+                            code: "rEBUqZqFTjQ"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ১০: স্থির বিদ্যুৎ",
+                    lectures: [{
+                            name: "Lec: 57",
+                            code: "Gm3twfkV4AI"
+                        },
+                        {
+                            name: "Lec: 58",
+                            code: "lGO3pcVZ6yc"
+                        },
+                        {
+                            name: "Lec: 59",
+                            code: "sodN5FtD5d0"
+                        },
+                        {
+                            name: "Lec: 60",
+                            code: "hl8bAV6ZfhU"
+                        },
+                        {
+                            name: "Lec: 61",
+                            code: "p7MkX1VEk2g"
+                        },
+                        {
+                            name: "Lec: 62",
+                            code: "3PbMBasuy9U"
+                        }
+                    ]
+                }
+            ],
+            "রসায়ন": [{
+                    chapter: "অধ্যায়- ০১: রসায়নের ধারণা",
+                    lectures: [{
+                        name: "Lec: 01",
+                        code: "eysGgNG8TpM"
+                    }]
+                },
+                {
+                    chapter: "অধ্যায়- ০২: পদার্থের অবস্থা",
+                    lectures: [{
+                            name: "Lec: 3+4",
+                            code: "gGMrEESRj6g"
+                        },
+                        {
+                            name: "Lec: 5+6",
+                            code: "ijvlzRyskNk"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৩: পদার্থের গঠন",
+                    lectures: [{
+                            name: "Lec: 7+8",
+                            code: "x-hifmR57RA"
+                        },
+                        {
+                            name: "Lec: 09+10",
+                            code: "jn9y20BAeFA"
+                        },
+                        {
+                            name: "Lec: 11+12",
+                            code: "64yRtx1WDs4"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৪: পর্যায় সারণি",
+                    lectures: [{
+                            name: "Lec: 13+14",
+                            code: "kX_GcRgvCeg"
+                        },
+                        {
+                            name: "Lec: 15+16",
+                            code: "Fl8rkdIy2JU"
+                        },
+                        {
+                            name: "Lec: C-13",
+                            code: "G7njcPklj5M"
+                        },
+                        {
+                            name: "Lec: 44",
+                            code: "yPisn89wN3A"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৫: রাসায়নিক বন্ধন",
+                    lectures: [{
+                            name: "Lec: 17+18",
+                            code: "TqWBU6qmUJg"
+                        },
+                        {
+                            name: "Lec: 19+20",
+                            code: "6bP7ZIwNyRI"
+                        },
+                        {
+                            name: "Lec: 21+22",
+                            code: "VfO7tWa26jk"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৬: মোলের ধারণা ও রাসায়নিক গণনা",
+                    lectures: [{
+                            name: "Lec: 23",
+                            code: "WTi0odcwkas"
+                        },
+                        {
+                            name: "Lec: 24",
+                            code: "4TljJLdOAZA"
+                        },
+                        {
+                            name: "Lec: 25",
+                            code: "gmG7pRphoyA"
+                        },
+                        {
+                            name: "Lec: 26",
+                            code: "uskdYKwQZgU"
+                        },
+                        {
+                            name: "Lec: 27",
+                            code: "1WEMJsKrTVM"
+                        },
+                        {
+                            name: "Lec: 28",
+                            code: "zvGdyexUgmc"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৭: রাসায়নিক বিক্রিয়া",
+                    lectures: [{
+                            name: "Lec: 29",
+                            code: "b5Kp7zWjjUg"
+                        },
+                        {
+                            name: "Lec: 30",
+                            code: "CzlX6BArafg"
+                        },
+                        {
+                            name: "Lec: 31",
+                            code: "FskyZ-WGmoM"
+                        },
+                        {
+                            name: "Lec: 32",
+                            code: "DX8uCLpbeS4"
+                        },
+                        {
+                            name: "Lec: 34",
+                            code: "y0oCknf0Ieo"
+                        },
+                        {
+                            name: "Lec: 35",
+                            code: "9MUcEQO_SSw"
+                        },
+                        {
+                            name: "Lec: 36",
+                            code: "DUFe4xQpbx4"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৮: রসায়ন ও শক্তি",
+                    lectures: [{
+                            name: "Lec: 37",
+                            code: "8RzE6YJUjlg"
+                        },
+                        {
+                            name: "Lec: 38",
+                            code: "0XW1xV-ArAo"
+                        },
+                        {
+                            name: "Lec: 39",
+                            code: "EUwBgTsJZ3E"
+                        },
+                        {
+                            name: "Lec: 40",
+                            code: "mO9G6-9f4gA"
+                        },
+                        {
+                            name: "Lec: 41",
+                            code: "kf4eBhEZl-w"
+                        },
+                        {
+                            name: "Lec: 42",
+                            code: "jI2rUi31lOI"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৯: রাসায়নিক বিক্রিয়া (অতিরিক্ত)",
+                    lectures: [{
+                            name: "Lec: 33",
+                            code: "NA4dom20rjQ"
+                        },
+                        {
+                            name: "Lec: 43",
+                            code: "DG2rxWuW9Oc"
+                        },
+                        {
+                            name: "Lec: 45",
+                            code: "WqOFQxi3ZuE"
+                        },
+                        {
+                            name: "Lec: 46",
+                            code: "MrTK3O4Mhso"
+                        }
+                    ]
+                }
+            ],
+            "জীববিজ্ঞান": [{
+                    chapter: "অধ্যায়- ০১: জীবন পাঠ",
+                    lectures: [{
+                        name: "Lec 1+2",
+                        code: "kMH025L2A4g"
+                    }]
+                },
+                {
+                    chapter: "অধ্যায়- ০২: জীবকোষ ও টিস্যু",
+                    lectures: [{
+                            name: "Lec 3+4",
+                            code: "bxx1w87iZ30"
+                        },
+                        {
+                            name: "Lec 5+6",
+                            code: "IL1QyOTGNZ8"
+                        },
+                        {
+                            name: "Lec 7+8",
+                            code: "O4POVNjF8B0"
+                        },
+                        {
+                            name: "Lec 03",
+                            code: "LrewgYgX2AM"
+                        },
+                        {
+                            name: "Lec 04",
+                            code: "0Xgo6POSzgc"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৩: কোষ বিভাজন",
+                    lectures: [{
+                        name: "Lec 11+12",
+                        code: "txuT5Cyt7Ag"
+                    }]
+                },
+                {
+                    chapter: "অধ্যায়- ০৪: জীবনীশক্তি",
+                    lectures: [{
+                            name: "Lec 13+14",
+                            code: "jO9v8xa3QI8"
+                        },
+                        {
+                            name: "Lec 15+16",
+                            code: "7ushN-f3TYI"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৫: খাদ্য, পুষ্টি এবং পরিপাক",
+                    lectures: [{
+                            name: "Lec 17+18",
+                            code: "TSKz-3GLLf8"
+                        },
+                        {
+                            name: "Lec 19+20",
+                            code: "YZqVz5XHvV0"
+                        },
+                        {
+                            name: "Lec 21+22",
+                            code: "Ue2ItSoOuQY"
+                        },
+                        {
+                            name: "Lec 23",
+                            code: "q4B2pD4tTS4"
+                        },
+                        {
+                            name: "Lec 24",
+                            code: "oUMlefCdOos"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৬: জীবে পরিবহন",
+                    lectures: [{
+                            name: "Lec 25",
+                            code: "NgoPCiZiNnA"
+                        },
+                        {
+                            name: "Lec 26",
+                            code: "J7L0QZ2wdxg"
+                        },
+                        {
+                            name: "Lec 27",
+                            code: "jz5rf2nIBkw"
+                        },
+                        {
+                            name: "Lec 28",
+                            code: "FoVtZmoyNhc"
+                        },
+                        {
+                            name: "Lec 29",
+                            code: "5BUpsT-JG9A"
+                        },
+                        {
+                            name: "Lec 30",
+                            code: "4MHkl7Eve2U"
+                        },
+                        {
+                            name: "Lec 31",
+                            code: "5SKEHV2G3w4"
+                        },
+                        {
+                            name: "Lec 32",
+                            code: "mZj3h4jqA7o"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৭: গ্যাসীয় বিনিময়",
+                    lectures: [{
+                            name: "Lec 33",
+                            code: "iTynFm9irJ8"
+                        },
+                        {
+                            name: "Lec 34",
+                            code: "GOp_PgXEMs4"
+                        },
+                        {
+                            name: "Lec 35",
+                            code: "Y2eqXtIokHA"
+                        },
+                        {
+                            name: "Lec 36",
+                            code: "ELt1uNJTWmg"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৮: রেচন প্রক্রিয়া",
+                    lectures: [{
+                            name: "Lec 37",
+                            code: "Cr7qmdr7kjA"
+                        },
+                        {
+                            name: "Lec 38",
+                            code: "Zb_zztKdIj0"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়-০৯: দৃঢ়তা প্রদান ও চলন",
+                    lectures: [{
+                            name: "Lec 39",
+                            code: "aF57kWDmch4"
+                        },
+                        {
+                            name: "Lec 40",
+                            code: "5TILMekQA20"
+                        },
+                        {
+                            name: "Lec 41",
+                            code: "XLFLBh4RU54"
+                        },
+                        {
+                            name: "Lec 42",
+                            code: "xMVljyQ27vo"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ১০: সমন্বয়",
+                    lectures: [{
+                            name: "Lec 43",
+                            code: "jAy8OolRWj0"
+                        },
+                        {
+                            name: "Lec 44",
+                            code: "8yRB4mq-5cM"
+                        },
+                        {
+                            name: "Lec 45",
+                            code: "0W8ZQ9ahGfk"
+                        },
+                        {
+                            name: "Lec 46",
+                            code: "Eua2WFldXLQ"
+                        },
+                        {
+                            name: "Lec 47",
+                            code: "tkDw6eBhfuY"
+                        },
+                        {
+                            name: "Lec 48",
+                            code: "sGXUsVOfNKo"
+                        }
+                    ]
+                }
+            ],
+            "সাধারণ গণিত": [{
+                    chapter: "অধ্যায়- ০১: বাস্তব সংখ্যা",
+                    lectures: [{
+                            name: "Lec 1+2",
+                            code: "MYTM24ZbzNg"
+                        },
+                        {
+                            name: "Lec: 3+4",
+                            code: "uXlmjH2QNq4"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০২: সেট ও ফাংশন",
+                    lectures: [{
+                            name: "Lec 5+6",
+                            code: "f8UpH4xK77g"
+                        },
+                        {
+                            name: "Lec: 7+8",
+                            code: "WRYSZHZV4-4"
+                        },
+                        {
+                            name: "Lec: 7",
+                            code: "J5ir51ws0_Y"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়-০৩: বীজগাণিতিক রাশি",
+                    lectures: [{
+                            name: "Lec: 11+12",
+                            code: "ZcDbM99bpww"
+                        },
+                        {
+                            name: "Lec: 13+14",
+                            code: "MNNhaSdXoLA"
+                        },
+                        {
+                            name: "Lec: 15+16",
+                            code: "WPJWMfhiBCU"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৪: সূচক ও লগারিদম",
+                    lectures: [{
+                            name: "Lec: 17",
+                            code: "hJ7KsqX4yVU"
+                        },
+                        {
+                            name: "Lec: 18",
+                            code: "XMkbpJ94w2o"
+                        },
+                        {
+                            name: "Lec: 19",
+                            code: "eNNG02XesoM"
+                        },
+                        {
+                            name: "Lec: 20",
+                            code: "KI5Mg-1GGB8"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৫: এক চলকবিশিষ্ট সমীকরণ",
+                    lectures: [{
+                            name: "Lec 21",
+                            code: "_8I4gy-W6iU"
+                        },
+                        {
+                            name: "Lec: 22",
+                            code: "G_zrfqAq_mQ"
+                        },
+                        {
+                            name: "Lec: 23",
+                            code: "dm8-oqSr-tc"
+                        },
+                        {
+                            name: "Lec: 24",
+                            code: "m7x5pWZ7q9c"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৬: রেখা, কোণ ও ত্রিভুজ",
+                    lectures: [{
+                            name: "Lec: 25+26",
+                            code: "1QAs6XnHy-c"
+                        },
+                        {
+                            name: "Lec: 27+28",
+                            code: "btH80_AOnAE"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৭: ব্যবহারিক জ্যামিতি",
+                    lectures: [{
+                            name: "Lec: 29+30",
+                            code: "2AFlwxImshI"
+                        },
+                        {
+                            name: "Lec: 31",
+                            code: "ei77rgxF_FY"
+                        },
+                        {
+                            name: "Lec: 32",
+                            code: "S3Yn5LxQArA"
+                        },
+                        {
+                            name: "Lec: 33",
+                            code: "X0zsA1xIkrc"
+                        },
+                        {
+                            name: "Lec: 34",
+                            code: "vgIiULLzl7Y"
+                        },
+                        {
+                            name: "Lec: 35",
+                            code: "NPJ3ZcEtsHU"
+                        },
+                        {
+                            name: "Lec: 36",
+                            code: "FVK9VYNGsy0"
+                        },
+                        {
+                            name: "Lec: 37",
+                            code: "k5e4VDfm7X4"
+                        },
+                        {
+                            name: "Lec: 38",
+                            code: "MjS6yHnIw4Y"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৯: ত্রিকোণমিতিক অনুপাত",
+                    lectures: [{
+                            name: "Lec: 39",
+                            code: "EmAg5fFqgF8"
+                        },
+                        {
+                            name: "Lec 40",
+                            code: "30lCLpXbwxI"
+                        },
+                        {
+                            name: "Lec: 41",
+                            code: "NfOEnxQKPFw"
+                        },
+                        {
+                            name: "Lec: 42",
+                            code: "Lq44D1dXTIw"
+                        },
+                        {
+                            name: "Lec: 43",
+                            code: "NMxPH8yJjao"
+                        },
+                        {
+                            name: "Lec: 44",
+                            code: "Its8YA6oETA"
+                        },
+                        {
+                            name: "Lec: 56",
+                            code: "mxieFfWVCKM"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ১১: বীজগাণিতিক অনুপাত ও সমানুপাত",
+                    lectures: [{
+                            name: "Lec: 45",
+                            code: "VRGVKI5NPg0"
+                        },
+                        {
+                            name: "Lec: 46",
+                            code: "JNFO2gZ1saY"
+                        },
+                        {
+                            name: "Lec 47",
+                            code: "mFz_LfScTwc"
+                        },
+                        {
+                            name: "Lec: 48",
+                            code: "3OCE_flrilU"
+                        },
+                        {
+                            name: "Lec: 49",
+                            code: "jhV7LRSSkAs"
+                        },
+                        {
+                            name: "Lec: 50",
+                            code: "yz2VqYavWKM"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ১৩: সসীম ধারা",
+                    lectures: [{
+                        name: "Lec 51+52",
+                        code: "7oDLTq2Ycwc"
+                    }]
+                },
+                {
+                    chapter: "অধ্যায়- ১৬: পরিমিতি",
+                    lectures: [{
+                            name: "Lec: 53",
+                            code: "60P8EznmKeQ"
+                        },
+                        {
+                            name: "Lec: 54",
+                            code: "GvT1q7XC25U"
+                        },
+                        {
+                            name: "Lec 55",
+                            code: "d46WhGEZje8"
+                        },
+                        {
+                            name: "Lec 56",
+                            code: "VWhJk5_mz1I"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ১৭: পরিসংখ্যান",
+                    lectures: [{
+                            name: "Lec: 57",
+                            code: "vgN0Hfaizek"
+                        },
+                        {
+                            name: "Lec: 58",
+                            code: "WRXSw9QOiFI"
+                        },
+                        {
+                            name: "Lec 59",
+                            code: "ZwFvL6hfHsk"
+                        },
+                        {
+                            name: "Lec: 60",
+                            code: "_pDI_r1-47A"
+                        }
+                    ]
+                }
+            ],
+            "উচ্চতর গণিত": [{
+                    chapter: "অধ্যায়- ০১: সেট ও ফাংশন",
+                    lectures: [{
+                            name: "Lec: 1+2",
+                            code: "8s0LtAmnwm4"
+                        },
+                        {
+                            name: "Lec: 3+4",
+                            code: "AyxsTGiurmA"
+                        },
+                        {
+                            name: "Lec: 5+6",
+                            code: "Xji08P8w-P8"
+                        },
+                        {
+                            name: "Lec: 7+8",
+                            code: "LhnwPDYBuSU"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০২: বীজগাণিতিক রাশি",
+                    lectures: [{
+                            name: "Lec: 9+10",
+                            code: "RCIXwDIW4zM"
+                        },
+                        {
+                            name: "Lec 11+12",
+                            code: "JOKn62bIF6c"
+                        },
+                        {
+                            name: "Lec 13+14",
+                            code: "81GKeVlC8ms"
+                        },
+                        {
+                            name: "Lec 9",
+                            code: "w8jf70AiTjw"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৩: জ্যামিতি",
+                    lectures: [{
+                            name: "Lec 15+16",
+                            code: "MN6f6a7DvJE"
+                        },
+                        {
+                            name: "Lec 17+18",
+                            code: "jJrB7mhWb5s"
+                        },
+                        {
+                            name: "Lec 19+20",
+                            code: "5801ALY9Luc"
+                        },
+                        {
+                            name: "Lec 21",
+                            code: "Mu50OnpjEHU"
+                        },
+                        {
+                            name: "Lec 22",
+                            code: "0H-AD25BAck"
+                        },
+                        {
+                            name: "Lec 23",
+                            code: "rvzUf4yf830"
+                        },
+                        {
+                            name: "Lec 24",
+                            code: "cMc5XeaohEY"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৫: সমীকরণ",
+                    lectures: [{
+                            name: "Lec 25",
+                            code: "WsWwTkdOixw"
+                        },
+                        {
+                            name: "Lec 27",
+                            code: "A8et0mU_pjA"
+                        },
+                        {
+                            name: "Lec 28",
+                            code: "kEmd8YpoPMg"
+                        },
+                        {
+                            name: "Lec 29",
+                            code: "1zcOmPDTonQ"
+                        },
+                        {
+                            name: "Lec 30",
+                            code: "FbFOPnp3anw"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৬: অসমতা",
+                    lectures: [{
+                        name: "Lec 26",
+                        code: "TJqg-Gb_buM"
+                    }]
+                },
+                {
+                    chapter: "অধ্যায়- ০৮: ত্রিকোণমিতি",
+                    lectures: [{
+                            name: "Lec 31+32",
+                            code: "hKwBaxo-vXc"
+                        },
+                        {
+                            name: "Lec 33",
+                            code: "BMJgapLVegM"
+                        },
+                        {
+                            name: "Lec 34",
+                            code: "1zQaMD0IXRs"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ০৯: সূচকীয় ও লগারিদমীয় ফাংশন",
+                    lectures: [{
+                            name: "Lec 35",
+                            code: "0czxqbwBAkg"
+                        },
+                        {
+                            name: "Lec 36",
+                            code: "5Q_ByNKHZlg"
+                        },
+                        {
+                            name: "Lec 37",
+                            code: "F5INCXwKfsE"
+                        },
+                        {
+                            name: "Lec 38",
+                            code: "sewUyZgp19o"
+                        },
+                        {
+                            name: "Lec 39",
+                            code: "3_hGQE1bByY"
+                        },
+                        {
+                            name: "Lec 40",
+                            code: "Pg8zvsA7hIE"
+                        },
+                        {
+                            name: "Lec 41",
+                            code: "YNL_5IcU_Hs"
+                        },
+                        {
+                            name: "Lec 42",
+                            code: "TUfBZUQuM9Y"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ১১: স্থানাঙ্ক জ্যামিতি",
+                    lectures: [{
+                            name: "Lec 43",
+                            code: "FjYTt5VLz2o"
+                        },
+                        {
+                            name: "Lec 44",
+                            code: "OKZxDYrzPv8"
+                        },
+                        {
+                            name: "Lec 45",
+                            code: "x2HF2tXa0XI"
+                        },
+                        {
+                            name: "Lec 46",
+                            code: "dNdP96N3xok"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ১৩: ঘন জ্যামিতি",
+                    lectures: [{
+                            name: "Lec 47",
+                            code: "oD1EHskujrU"
+                        },
+                        {
+                            name: "Lec 48",
+                            code: "33rbQhkieQg"
+                        },
+                        {
+                            name: "Lec 49",
+                            code: "XsnJHKkeA2Y"
+                        },
+                        {
+                            name: "Lec 50",
+                            code: "Ky6z4Fg3zAY"
+                        },
+                        {
+                            name: "Lec 51",
+                            code: "WHO1cNiglDo"
+                        },
+                        {
+                            name: "Lec 52",
+                            code: "H64QJ2Q5cJ4"
+                        }
+                    ]
+                },
+                {
+                    chapter: "অধ্যায়- ১৪: সম্ভাবনা া",
+                    lectures: [{
+                            name: "Lec 53",
+                            code: "EHC21Bqrbro"
+                        },
+                        {
+                            name: "Lec 54",
+                            code: "sb3-W8SkPFE"
+                        },
+                        {
+                            name: "Lec 55",
+                            code: "8htch7szeWE"
+                        },
+                        {
+                            name: "Lec 56",
+                            code: "c3Pffp0zKvY"
+                        }
+                    ]
+                }
+            ]
+        };
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const idInput = document.getElementById('user-id').value.trim();
+            const userName = idInput !== "" ? idInput : "Student";
+
+            document.getElementById('display-user-name').innerText = userName;
+            document.getElementById('welcome-name').innerText = userName;
+
+            showScreen('app-screen');
+            showPage('dashboard-view');
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function showPage(id) {
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function openSubject(subName) {
+            document.getElementById('current-subject-title').innerText = subName;
+            const container = document.getElementById('chapters-container');
+            container.innerHTML = "";
+
+            const chapters = courseData[subName] || [];
+
+            if (chapters.length === 0) {
+                container.innerHTML = "<p style='color: #64748b;'>এই বিষয়ের লেকচার খুব শীঘ্রই যুক্ত করা হবে।</p>";
+            } else {
+                chapters.forEach(chap => {
+                    let lecButtons = "";
+                    chap.lectures.forEach(lec => {
+                        lecButtons += `
+                            <div class="lecture-btn" onclick="playVideo('${lec.name}', '${lec.code}')">
+                                <span><i class="fa-regular fa-circle-play"></i> ${lec.name}</span>
+                                <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i>
+                            </div>
+                        `;
+                    });
+
+                    container.innerHTML += `
+                        <div class="chapter-card">
+                            <div class="chapter-title">${chap.chapter}</div>
+                            <div class="lecture-grid">${lecButtons}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            showPage('chapters-view');
+        }
+
+        function playVideo(title, videoCode) {
+            document.getElementById('video-title').innerText = title;
+            const embedUrl = `https://www.youtube.com/embed/${videoCode}?autoplay=1&rel=0`;
+            document.getElementById('video-frame').src = embedUrl;
+            document.getElementById('video-modal').classList.add('active');
+        }
+
+        function closeVideo() {
+            document.getElementById('video-frame').src = "";
+            document.getElementById('video-modal').classList.remove('active');
+        }
+
+        function logout() {
+            closeVideo();
+            document.getElementById('login-form').reset();
+            showScreen('login-screen');
+        }
+    </script>
+</body>
+
+</html>
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <title>APK</title>
+</head>
+
+<body>
+    <h1>APK</h1>
+    <div>
+        Hello World!
+    </div>
+</body>
+
+</html>
